@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getBrowserSupabase } from '@/lib/browserSupabase';
+import { getBrowserSupabase, hasBrowserSupabaseConfig } from '@/lib/browserSupabase';
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
@@ -34,6 +34,15 @@ export default function AdminLoginPage() {
 
     router.push('/admin/dashboard');
   };
+
+  if (!hasBrowserSupabaseConfig()) {
+    return (
+      <div className="mx-auto max-w-2xl px-6 py-28 text-white">
+        <p className="text-xl font-semibold">Supabase configuration is missing.</p>
+        <p className="mt-3 text-sm text-muted">Create a <code className="rounded bg-surface px-1 py-0.5">.env.local</code> file with NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.</p>
+      </div>
+    );
+  }
 
   if (!supabase) {
     return <div className="mx-auto max-w-2xl px-6 py-28 text-white">Loading admin login…</div>;
